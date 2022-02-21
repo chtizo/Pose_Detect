@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teaching Report with Emotion Analysis</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+        * {
+        margin: 0;
+        padding: 0;
+        -webkit-box-sizing: border-box;
+                box-sizing: border-box;
+        font-family: 'Poppins', sans-serif;
+        color: white;
+        }
+
+        html {
+        min-height: 100vh;
+        }
+
+        body {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+                flex-direction: column;
+        -webkit-box-pack: center;
+            -ms-flex-pack: center;
+                justify-content: center;
+        -webkit-box-align: center;
+            -ms-flex-align: center;
+                align-items: center;
+        height: 100vh;
+        background-color: #66c1e5;
+        overflow: hidden;
+        }
+
+        .output {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-orient: horizontal;
+        -webkit-box-direction: normal;
+            -ms-flex-direction: row;
+                flex-direction: row;
+        -ms-flex-pack: distribute;
+            justify-content: space-around;
+        -webkit-box-align: center;
+            -ms-flex-align: center;
+                align-items: center;
+        width: 100%;
+        height: 100%;
+        transform: translate(0, -80px);
+        background-color: transparent;
+        }
+
+        .video {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            margin: 15px 0 8px 0;
+        }
+
+        .video video {
+            width: 80%;
+            max-height: 60%;
+        }
+
+        .output-vid {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 50%;
+            overflow: hidden;
+            margin: 15px 0 8px 0;
+        }
+
+        .output-video {
+            /* width: 80%; */
+            height: 140%;
+            display: block;
+        }
+
+        .video .video-name {
+            display: none;
+            position: absolute;
+            top: 105%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .upload-div {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -webkit-transform: translate(-50%, -50%);
+                transform: translate(-50%, -50%);
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+                flex-direction: column;
+        -webkit-box-pack: center;
+            -ms-flex-pack: center;
+                justify-content: center;
+        -webkit-box-align: center;
+            -ms-flex-align: center;
+                align-items: center;
+        width: 550px;
+        height: 450px;
+        background-color: transparent;
+        border: 4px dashed white;
+        border-radius: 8px;
+        font-size: 24px;
+        cursor: pointer;
+        -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+                user-select: none;
+        z-index: 5;
+        }
+
+        .upload-div i {
+        color: white;
+        font-size: 150px;
+        pointer-events: none;
+        }
+
+        .upload-div * {
+        pointer-events: none;
+        }
+
+        .upload-div:hover {
+        background-color: rgba(255, 255, 255, 0.1) !important;
+        }
+
+        .progress-bar {
+            position: absolute;
+            background-color: rgba(0, 0, 0, 0.1);
+            width: 60%;
+            height: 25px;
+            border-radius: 6px;
+            overflow: hidden;
+            border: 2px solid white;
+            display: none;
+        }
+
+        .progress-bar.active {
+            display: block;
+        }
+
+        .progress {
+            transition: all 0.1s ease;
+            background-color: rgb(38, 231, 20);
+            width: 10%;
+            height: 100%;
+        }
+
+        .progress-bar-analyse {
+            position: absolute;
+            background-color: rgba(0, 0, 0, 0.1);
+            width: 30%;
+            height: 25px;
+            border-radius: 6px;
+            overflow: hidden;
+            border: 2px solid white;
+            display: none;
+            z-index: 99;
+        }
+
+        .progress-bar-analyse.active {
+            display: block;
+        }
+
+        .progress-analyse {
+            transition: all 0.1s ease;
+            background-color: rgb(38, 231, 20);
+            width: 10%;
+            height: 100%;
+        }
+
+        .active-view {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            justify-content: center;
+            align-items: center;
+        }
+
+        hr {
+            border: none;
+            border-bottom: 4px solid white !important;
+            width: 100px;
+            margin: 5px 0;
+        }
+
+        .heading {
+            margin: 10px 0 0 0;
+            font-size: 50px;
+        }
+
+        .home {
+            padding: 5px 10px;
+            font-size: 28px;
+            border: 2px solid transparent;
+            border-radius: 6px;
+            outline: none;
+            background-color: transparent;
+            position: absolute;
+            top: 5%;
+            left: 4%;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+            z-index: 99;
+        }
+
+        .home:hover {
+            border: 2px solid white;
+        }
+
+        .home:active {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        #controls {
+            display: none;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            transform: translate(0, -150%);
+            width: 100%;
+            height: 60px;
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        #controls * {
+            margin: 0 10px;
+        }
+
+        #play {
+            background-color: transparent;
+            border: 2px solid transparent;
+            border-radius: 6px;
+            padding: 5px 10px;
+            margin-right: 30px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        #play:hover {
+            border: 2px solid white;
+        }
+
+        #play:active {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        #scrub {
+            width: 60%;
+        }
+    </style>
+</head>
+<body>
+    <button type="button" class="home">Home</button>
+    <span class="heading">Teaching Assistant Report</span>
+    <div class="upload-div">
+        <i class="fas fa-cloud-upload-alt"></i>
+        <br>
+        <div class="active-view">
+            <div class="progress-bar">
+                <div class="progress">
+    
+                </div>
+            </div>
+            <span>Drag & Drop</span>
+            <span>Or</span>
+            <span>Click to Upload</span>
+        </div>
+        <form method="POST" class="post-form" id="upload_form" enctype="multipart/form-data">  
+            {% csrf_token %}  
+            {{ video.as_p }}  
+            <!-- <button type="submit" class="save btn btn-default" hidden>Save</button>   -->
+        </form>
+
+        <form method="POST" class="post-form" id="analyse_form" enctype="multipart/form-data">  
+            {% csrf_token %}  
+            {{ analyse.as_p }}  
+            <!-- <button type="submit" class="save btn btn-default" hidden>Save</button>   -->
+        </form>
+        <!-- <input type="file" name='video' id='vid-input' hidden> -->
+    </div>
+
+    <div class="output">
+        <div class="video">
+            <div class="progress-bar-analyse">
+                <div class="progress-analyse"></div>
+            </div>
+        </div>
+        <div class="output-vid">
+        </div>
+    </div>
+    <p id="controls">
+        <input type="button" id="play" value="Play">
+        <span id="position"style="pointer-events: none;">00:00</span>
+        <input type="range" value="0" min="0" id="scrub" step="0.1"/>
+        <span id="duration"style="pointer-events: none;">loading...</span>
+    </p>
+
+    <script>
+
+        var upload_div = document.querySelector('.upload-div');
+        var video_input = document.querySelector('#upload_form input[type=file]');
+        var upload_form = document.querySelector('#upload_form');
+        var analyse_form = document.querySelector('#analyse_form');
+        var progress_bar = document.querySelector('.progress-bar');
+        var progress_bar_analyse = document.querySelector('.progress-bar-analyse');
+        var resstream = [];
+
+        function addEvent(elem, eve, func) {
+            elem.addEventListener(eve, func);
+        }
+
+        document.querySelector('html').style.zoom = (window.innerWidth/1920)*100 + "%";
+
+        analyse_form.style.display = 'none';
+
+        document.querySelectorAll('label').forEach(label => {
+            label.remove();
+        });
+
+        upload_div.addEventListener('click', upload_click)
+
+        function upload_click() {
+            video_input.click();
+        }
+
+        function analyse_click() {
+            upload(analyse_form, 'download');
+        }
+
+        upload_div.addEventListener('dragover', (e) => {
+            e.preventDefault();
+
+            upload_div.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+
+            var texts = document.querySelector('.upload-div').querySelectorAll('span');
+
+            texts[0].innerText = 'Release to Upload';
+            texts[1].innerText = '';
+            texts[2].innerText = '';
+        })
+
+        upload_div.addEventListener('dragleave', () => {
+        upload_div.style.backgroundColor = 'transparent';
+
+        var texts = upload_div.querySelectorAll('span');
+
+        texts[0].innerText = 'Drag & Drop';
+        texts[1].innerText = 'Or';
+        texts[2].innerText = 'Click to Upload';
+        })
+
+        upload_div.addEventListener('drop', (e) => {
+            e.preventDefault();
+
+            upload_div.style.backgroundColor = 'transparent';
+
+            var texts = upload_div.querySelectorAll('span');
+
+            texts[0].style.display = 'none';
+            texts[1].style.display = 'none';
+            texts[2].style.display = 'none';
+            progress_bar.classList.add('active');
+            progress_bar.querySelector('.progress').style.width = '0%';
+
+            if (e.dataTransfer.files) {
+                video_input.files = e.dataTransfer.files;
+                upload(upload_form, 'upload');
+            }
+        })
+
+        video_input.addEventListener('change', () => {
+            upload_div.style.backgroundColor = 'transparent';
+
+            var texts = upload_div.querySelectorAll('span');
+
+            texts[0].style.display = 'none';
+            texts[1].style.display = 'none';
+            texts[2].style.display = 'none';
+            progress_bar.classList.add('active');
+            progress_bar.querySelector('.progress').style.width = '0%';
+
+            if (video_input.files) {
+                upload(upload_form, 'upload');
+            }
+        })
+
+        function upload(form, uord) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', "/", true);
+            if (uord == 'upload') {
+                upload_div.removeEventListener('click', upload_click);
+                xhr.upload.addEventListener('progress', ({loaded, total}) => {
+                    var fileLoaded = Math.floor((loaded/total) * 100);
+                    progress_bar.querySelector('.progress').style.width = fileLoaded + '%';
+                });
+            } else if (uord == 'download') {
+                upload_div.removeEventListener('click', analyse_click);
+                var restreamtext = '';
+                var first = true;
+                upload_div.querySelector('i').classList.remove('fa-chart-area');
+                upload_div.querySelector('i').classList.add('fa-cog', 'fa-spin');
+                xhr.addEventListener('progress', async (progress) => {
+                    var delta_res = '';
+                    var temp_res = xhr.responseText.substr(restreamtext.length);
+                    var temp_res_arr = temp_res.split('|');
+                    temp_res_arr.forEach(async line => {
+                        if (line) {
+                            delta_res = JSON.parse(line);
+                            if (first) {
+                                upload_div.style.display = 'none';
+                                document.querySelector('.video').querySelector('video').style.display = 'block';
+                                document.querySelector('.video').querySelector('.video-name').style.display = 'block';
+                                document.querySelector('.heading').style.display = 'none';
+                                var texts = upload_div.querySelectorAll('span');
+                                texts[0].innerText = '';
+                                texts[0].style.display = 'none';
+                                progress_bar_analyse.classList.add('active');
+                                first = false;
+                            }
+
+                            progress_bar_analyse.querySelector('.progress-analyse').style.width = ((delta_res.time/delta_res.total_time) * 100) + '%';
+                        }
+                    })
+                    restreamtext += temp_res;
+                    resstream.push(delta_res);
+                })
+            }
+
+            xhr.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    progress_bar.classList.remove('active');
+                    progress_bar.querySelector('.progress').style.width = '0%';
+
+                    var response = xhr.responseText;
+                    
+                    if (response.split('|')[0] == 'uploaded') {
+                        var video = document.createElement('video');
+                        var video_name = document.createElement('div');
+                        video_name.classList.add('video-name');
+                        video.style.display = 'none';
+                        setVideo(response.split('|')[1], video);
+                        video_name.innerHTML = response.split('|')[1].split('/').reverse()[0];
+                        video.style.filter = 'blur(3px)';
+                        document.querySelector('.video').append(video);
+                        document.querySelector('.video').append(video_name);
+                        // vidUrls[1] = 'Pose_Detect_App/output/output.mp4';
+                        var texts = upload_div.querySelectorAll('span');
+                        texts[0].innerText = 'Generate Report';
+                        texts[0].style.display = 'inline';
+                        upload_div.querySelector('i').classList.remove('fa-cloud-upload-alt');
+                        upload_div.querySelector('i').classList.add('fa-chart-area');
+
+                        upload_div.addEventListener('click', analyse_click);
+                    } else {
+                        progress_bar_analyse.classList.remove('active');
+                        progress_bar_analyse.querySelector('.progress-analyse').style.width = '0%';
+                        var output = document.createElement('video');
+                        output.classList.add('output-video');
+                        setVideo('Pose_Detect_App/output/output.mp4', output);
+                        document.querySelector('.output-vid').append(output);
+                        // output.controls = true;
+                        // output.load();
+                        // output.controls = true;
+                        document.querySelector('.video').querySelector('video').style.filter = 'none';
+                        // document.querySelector('.video').querySelector('video').controls = true;
+                        document.querySelector('.video').querySelector('video').focus();
+                        document.querySelector('.video').querySelector('video').load();
+                        first = true;
+                        setControls();
+                    }
+                };
+            }
+            var formData = new FormData(form);
+            xhr.send(formData);
+        }
+
+        function setControls() {
+            var video = document.querySelector('.video').querySelector('video'),
+                video2 = document.querySelector('.output-video'),
+                togglePlay = document.querySelector('#play'),
+                position = document.querySelector('#position'),
+                ready = false,
+                controls = document.querySelector('#controls'),
+                scrub = document.querySelector('#scrub');
+
+            controls.style.display = "flex";
+
+            addEvent(togglePlay, 'click', function () {
+            if (ready) {
+                if (video.paused) {
+                    if (video.ended) {
+                        video.currentTime = 0;
+                        video2.currentTime = 0;
+                    }
+                    video2.currentTime = video.currentTime;
+                    video.play();
+                    this.value = "Pause";
+                    } else {
+                    video.pause();
+                    this.value = "Play";
+                    }
+                }
+            });
+
+            function seek() {
+                scrub.value = video2.currentTime = this.currentTime;
+            }
+
+            addEvent(video, 'seeking', seek);
+            addEvent(video, 'seeked', seek);
+
+            addEvent(video, 'play', function () {
+                video2.play();
+            });
+
+            addEvent(video, 'pause', function () {
+                video2.pause();
+            })
+
+            addEvent(video, 'timeupdate', function () {
+                position.innerHTML = asTime(this.currentTime);
+                scrub.value = this.currentTime;
+            });
+
+            addEvent(video, 'ended', function () {
+                togglePlay.value = "Play";
+            });
+
+            addEvent(video, 'canplay', function () {
+                video.muted = true;
+                ready = true;
+                document.querySelector('#duration').innerHTML = asTime(this.duration);
+
+                scrub.setAttribute('max', this.duration);
+                addEvent(scrub, 'change', function () {
+                    video.currentTime = parseInt(this.value);
+                    video2.currentTime = parseInt(this.value);
+                });
+            });
+
+            function asTime(t) {
+                t = Math.round(t);
+                var s = t % 60;
+                var m = Math.round(t / 60);
+                
+                return two(m) + ':' + two(s);
+            }
+
+            function two(s) {
+                s += "";
+                if (s.length < 2) s = "0" + s;
+                return s;
+            }
+        }
+
+        function setVideo(url, video) {
+            var xhr = new XMLHttpRequest();
+            xhr.onload = function () {
+                
+                var codes = new Uint8Array(xhr.response);
+
+                var bin = Uint8ArrayToBin(codes);
+
+                var b64 = btoa(bin);
+                var file = 'data:video/' + url.split('.')[1] + ';base64,' + b64;
+                video.src = file;
+            };
+
+            xhr.open('GET', url);
+            xhr.responseType = 'arraybuffer';
+            xhr.send();
+        }
+
+        function Uint8ArrayToBin(buffer) {
+            var binary = '';
+            var bytes = new Uint8Array(buffer);
+            var len = bytes.byteLength;
+            for (var i = 0; i < len; i++) {
+                binary += String.fromCharCode( bytes[ i ] );
+            }
+            return binary;
+        }
+        
+        document.querySelector('body').addEventListener('keyup', (e) => {
+            if (e.keyCode == 32 && document.querySelector('.video').querySelector('video')?.style.display != 'none') {
+                e.preventDefault();
+                if (document.querySelector('.video').querySelector('video') != document.activeElement) {
+                    if (document.querySelector('.video').querySelector('video').paused) {
+                        document.querySelector('.video').querySelector('video').play();
+                    } else {
+                        document.querySelector('.video').querySelector('video').pause();
+                    }
+                }
+            }
+        })
+    
+        document.querySelector('.home').addEventListener('click', () => {
+            location.reload();
+        })
+        
+    </script>
+</body>
+</html>

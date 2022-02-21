@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .image-div {
+            width: 790px;
+            height: 680px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        button {
+            padding: 10px 20px;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="image-div">
+        <img class="image">
+    </div>
+
+    <button class="play">Play</button>
+
+    <script>
+        var display = document.querySelector('.image');
+
+        const frames = 56;
+        const fps = 30;
+
+        var count;
+        var inter;
+        var frame_time = (1000/fps).toFixed(2);
+
+        function frame() {
+            display.src = '/frames/image_' + (frames - (count % frames)) + '.png';
+            count--;
+
+            if (count == 0) {
+                clearInterval(inter);
+            }
+        }
+
+        function play() {
+            inter = setInterval(frame, frame_time);
+        }
+
+        document.querySelector('.play').addEventListener('click', () => {
+            count = frames;
+            play();
+        })
+    </script>
+</body>
+</html>
