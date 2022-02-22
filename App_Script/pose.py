@@ -126,17 +126,22 @@ def detect(link):
   # with mp_pose.Pose(static_image_mode=False, min_detection_confidence=0.5, model_complexity=2) as pose:
   
   pose = mp_pose.Pose(static_image_mode=False, min_detection_confidence=0.5, model_complexity=2)
+  lands = ''
   while cap.isOpened():
       if cv2.waitKey(1) & 0xFF == ord('q'):
         break
       if frame >= total_frames:
+        f = open("Pose_Detect_App/output/landmarks(in meters).txt", 'w')
+        f.write(lands)
         video.release()
         cap.release()
         break
 
       time = total_frames/fps
       current_time = frame/fps
-          
+      
+      lands_first = True
+
       success, img = cap.read()
       results = pose.process(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
 
@@ -144,14 +149,21 @@ def detect(link):
       # the center between hips.
       # print('Nose world landmark:')
       # print(results.pose_world_landmarks.landmark[mp_pose.PoseLandmark.NOSE])
-      # print(results.pose_world_landmarks.landmark)
       #if len(results.pose_world_landmarks) >0:
       # Plot pose world landmarks.
       plot_landmarks(results.pose_world_landmarks, mp_pose.POSE_CONNECTIONS)
+      for landmark in results.pose_world_landmarks.landmark:
+        if lands_first:
+          lands += f'{landmark.x}, {landmark.y}, {landmark.z}'
+          lands_first = False
+        else:
+          lands += f', {landmark.x}, {landmark.y}, {landmark.z}'
+      if frame < total_frames:
+        lands += '\n'
       # print("drew")
       #else:
           #print("No landmarks")
-      print(frame)
+      # print(frame)
       yield json.dumps({"time": current_time, "total_time": time}) + "|"
       # if cv2.waitKey(1) & 0xFF == 27:
       #     break
