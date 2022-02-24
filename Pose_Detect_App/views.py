@@ -26,8 +26,8 @@ def index(request):
             
             link = 'Pose_Detect_App/upload/' + file
 
-            # return StreamingHttpResponse(detect(link))
-            return StreamingHttpResponse(iterator())
+            return StreamingHttpResponse(detect(link))
+            # return StreamingHttpResponse(iterator())
     else:
         video = VideoForm()
         analyse = AnalyseConfirm()
