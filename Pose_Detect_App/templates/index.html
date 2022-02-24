@@ -289,19 +289,28 @@
             display: none;
             text-decoration: none;
             /* font-size: 28px; */
-            width: 500px;
+            width: 600px;
         }
 
         .download-landmarks button {
+            position: relative;
             background-color: transparent;
             border: 2px solid white;
-            padding: 5px 10px;
+            padding: 20px 10px 20px 50px;
             font-size: 18px;
             outline: none;
         }
 
         .download-landmarks:hover button {
             background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .download-landmarks button i {
+            position: absolute;
+            font-size: 40px;
+            top: 50%;
+            left: 3%;
+            transform: translate(0, -50%);
         }
 
         .bg {
@@ -364,7 +373,7 @@
             
         </div>
         <a class="download-landmarks" href="#" download="landmarks(in meters).txt">
-            <button style="pointer-events: none;">Download Landmarks</button>
+            <button style="pointer-events: none;"><i class="fas fa-file-lines"></i>   Download Landmarks</button>
         </a>
         <div class="output-vid">
             <i class="fas fa-spinner fa-pulse"></i>
@@ -489,6 +498,7 @@
                         if (line) {
                             delta_res = JSON.parse(line);
                             if (first) {
+                                document.querySelector('.bg').querySelector('img').style.filter = 'blur(10px) brightness(50%) saturate(110%)';
                                 upload_div.style.display = 'none';
                                 document.querySelector('.video').querySelector('video').style.display = 'block';
                                 document.querySelector('.video').querySelector('.video-name').style.display = 'block';
