@@ -9,55 +9,40 @@
     <style>
         @import url("https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap");
         * {
-        margin: 0;
-        padding: 0;
-        -webkit-box-sizing: border-box;
-                box-sizing: border-box;
-        font-family: 'Roboto Mono', sans-serif;
-        color: white;
-        outline: none;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto Mono', sans-serif;
+            color: white;
+            outline: none;
         }
 
         html {
-        min-height: 100vh;
+            position: relative;
+            min-height: 937px;
         }
 
         body {
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-        -webkit-box-orient: vertical;
-        -webkit-box-direction: normal;
-            -ms-flex-direction: column;
-                flex-direction: column;
-        -webkit-box-pack: center;
-            -ms-flex-pack: center;
-                justify-content: center;
-        -webkit-box-align: center;
-            -ms-flex-align: center;
-                align-items: center;
-        height: 100vh;
-        background-color: #121212;
-        overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 937px;
+            height: 100vh;
+            background-color: #121212;
+            overflow: overlay;
         }
 
         .output {
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-        -webkit-box-orient: horizontal;
-        -webkit-box-direction: normal;
-            -ms-flex-direction: row;
-                flex-direction: row;
-        -ms-flex-pack: distribute;
-            justify-content: space-around;
-        -webkit-box-align: center;
-            -ms-flex-align: center;
-                align-items: center;
-        width: 100%;
-        height: 100%;
-        transform: translate(0, -2%);
-        background-color: transparent;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            transform: translate(0, -2%);
+            background-color: transparent;
         }
 
         .video {
@@ -66,28 +51,16 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            width: 100%;
-            margin: 15px 0 8px 0;
+            height: 30%;
+            margin: 0 0 8px 0;
         }
 
         .video video {
-            width: 80%;
-            max-height: 60%;
+            transform: translate(0, -50px);
+            width: 70%;
         }
 
-        .output-vid {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-            height: 50%;
-            overflow: hidden;
-            margin: 15px 0 8px 0;
-        }
-
-        .output-vid i {
+        .video i {
             display: none;
             z-index: -1; 
             transform: translate(-200%, -200%); 
@@ -97,64 +70,45 @@
             left: 50%;
         }
 
-        .output-video {
-            /* width: 80%; */
-            height: 140%;
-            display: block;
-        }
-
         .video .video-name {
             display: none;
             position: absolute;
-            top: 105%;
+            top: 130%;
             left: 50%;
             transform: translate(-50%, -50%);
         }
 
         .upload-div {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        -webkit-transform: translate(-50%, -50%);
-                transform: translate(-50%, -50%);
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-        -webkit-box-orient: vertical;
-        -webkit-box-direction: normal;
-            -ms-flex-direction: column;
-                flex-direction: column;
-        -webkit-box-pack: center;
-            -ms-flex-pack: center;
-                justify-content: center;
-        -webkit-box-align: center;
-            -ms-flex-align: center;
-                align-items: center;
-        width: 800px;
-        height: 550px;
-        background-color: rgba(0, 0, 0, 0.9);
-        border: 2px solid white;
-        font-size: 24px;
-        cursor: pointer;
-        -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-                user-select: none;
-        z-index: 5;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 800px;
+            height: 550px;
+            background-color: rgba(0, 0, 0, 0.9);
+            border: 2px solid white;
+            font-size: 24px;
+            cursor: pointer;
+            user-select: none;
+            z-index: 5;
         }
 
         .upload-div i {
-        color: white;
-        font-size: 150px;
-        pointer-events: none;
+            color: white;
+            font-size: 150px;
+            pointer-events: none;
         }
 
         .upload-div * {
-        pointer-events: none;
+            pointer-events: none;
         }
 
         .upload-div:hover {
-        background-color: rgba(0, 0, 0, 0.5) !important;
+            background-color: rgba(0, 0, 0, 0.5) !important;
         }
 
         .progress-bar {
@@ -254,7 +208,7 @@
             position: absolute;
             bottom: 0;
             left: 0;
-            transform: translate(0, -200%);
+            transform: translate(0, -300%);
             width: 100%;
             height: 60px;
             background-color: rgba(0, 0, 0, 0.1);
@@ -288,8 +242,7 @@
         .download-landmarks {
             display: none;
             text-decoration: none;
-            /* font-size: 28px; */
-            width: 600px;
+            width: fit-content;
         }
 
         .download-landmarks button {
@@ -332,6 +285,7 @@
         }
 
         .button {
+            display: none;
             background-color: black;
             padding: 5px 10px;
             margin: 15px 10px;
@@ -352,9 +306,70 @@
 
         #buttons {
             position: absolute;
-            bottom: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            bottom: 130px;
             left: 50%;
             transform: translate(-50%, 0);
+        }
+
+        .console {
+            display: none;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+            padding: 10px;
+            margin: 0 130px 0 0;
+            border: 2px solid white;
+            border-radius: 4px;
+            background-color: rgba(0, 0, 0, 0.2);
+            width: 600px;
+            height: 500px;
+            transform: translate(0, -55px);
+            overflow: auto;
+            white-space: pre;
+        }
+
+        .timestamp {
+            cursor: pointer;
+            color: white;
+        }
+
+        .timestamp.selected {
+            color: orange;
+        }
+
+        .timestamp:hover {
+            color: rgb(77, 175, 255);
+        }
+
+        .reps {
+            display: none;
+            position: absolute;
+            top: 120px;
+            right: 560px;
+            height: fit-content;
+            width: fit-content;
+            padding: 5px;
+            background-color: rgba(0, 0, 0, 0.1);
+            border: 2px solid white;
+            border-radius: 4px;
+            white-space: pre;
+        }
+
+        .type {
+            display: none;
+            position: absolute;
+            top: 120px;
+            right: 465px;
+            height: fit-content;
+            width: fit-content;
+            padding: 5px;
+            background-color: rgba(0, 0, 0, 0.1);
+            border: 2px solid white;
+            border-radius: 4px;
+            white-space: pre;
         }
     </style>
 </head>
@@ -368,21 +383,6 @@
         <form method="POST" class="post-form" id="analyse_form" enctype="multipart/form-data">  
             {% csrf_token %}  
             {{ analyse.as_p }}  
-        </form>
-        
-        <form method="POST" class="post-form" id="but1_form" enctype="multipart/form-data">  
-            {% csrf_token %}  
-            {{ but1.as_p }}  
-        </form>
-        
-        <form method="POST" class="post-form" id="but2_form" enctype="multipart/form-data">  
-            {% csrf_token %}  
-            {{ but2.as_p }}  
-        </form>
-        
-        <form method="POST" class="post-form" id="but3_form" enctype="multipart/form-data">  
-            {% csrf_token %}  
-            {{ but3.as_p }}  
         </form>
     </div>
     <div class="bg">
@@ -410,20 +410,21 @@
             <div class="progress-analyse"></div>
         </div>
         <div class="video">
-            
-        </div>
-        <a class="download-landmarks" href="#" download="landmarks(in meters).txt">
-            <button style="pointer-events: none;"><i class="fas fa-file-lines"></i>   Download Landmarks</button>
-        </a>
-        <div class="output-vid">
             <i class="fas fa-spinner fa-pulse"></i>
         </div>
+        <div class="reps"><font id="desc">Total Reps: </font><font id="reps">0</font></div>
+        <div class="type"><font id="type"></font></div>
+        <div class="console"></div>
     </div>
 
     <div id="buttons">
-        <button type="button" id="button1" class="button">Button1</button>
-        <button type="button" id="button2" class="button">Button2</button>
-        <button type="button" id="button3" class="button">Button3</button>
+        <button type="button" id="biceps" class="button">Bicep Curls</button>
+        <button type="button" id="squats" class="button">Squats</button>
+        <button type="button" id="strap" class="button">Strap</button>
+
+        <a class="download-landmarks" href="#" download="landmarks(in meters).txt">
+            <button style="pointer-events: none;"><i class="fas fa-file-lines"></i>   Download Landmarks</button>
+        </a>
     </div>
 
     <p id="controls">
@@ -442,14 +443,60 @@
         const progress_bar = document.querySelector('.progress-bar');
         const progress_bar_analyse = document.querySelector('.progress-bar-analyse');
         const buttons = document.querySelectorAll('.button');
+        const type_inp = analyse_form.querySelector('input[name=type]');
+        const consol = document.querySelector('.console');
+        const reps_div = document.querySelector('.reps');
+        const reps_el = document.querySelector('#reps');
+        const type_div = document.querySelector('.type');
+        const type_el = document.querySelector('#type');
 
+        var vid_name = '';
+        var type = '';
+        var prev_time = '';
+        var reps = '0';
+        var rep_type = '';
         var resstream = [];
 
         function addEvent(elem, eve, func) {
             elem.addEventListener(eve, func);
         }
 
-        document.querySelector('html').style.zoom = (window.innerWidth/1920)*100 + "%";
+        function asTime(t) {
+            t = Math.round(t);
+            var s = t % 60;
+            var m = Math.round(t / 60);
+            
+            return two(m) + ':' + two(s);
+        }
+
+        function two(s) {
+            s += "";
+            if (s.length < 2) s = "0" + s;
+            return s;
+        }
+
+        async function sleep(ms) {
+            return new Promise(r => setTimeout(() => r(), ms));
+        }
+
+        const width = window.screen.width;
+        const clamp = 0.75;
+
+        // console.log(document.documentElement.clientHeight);
+        
+        if (document.documentElement.clientWidth > (width * clamp)) {
+            document.documentElement.style.setProperty('zoom', ((document.documentElement.clientWidth/1920)*100) + "%");
+        } else {
+            document.documentElement.style.setProperty('zoom', (clamp * 100) + "%");
+        }
+
+        window.addEventListener('resize', (e) => {
+            if (document.documentElement.clientWidth > (width * clamp)) {
+                document.documentElement.style.setProperty('zoom', ((document.documentElement.clientWidth/1920)*100) + "%");
+            } else {
+                document.documentElement.style.setProperty('zoom', (clamp * 100) + "%");
+            }
+        })
 
         analyse_form.style.display = 'none';
 
@@ -480,13 +527,13 @@
         })
 
         upload_div.addEventListener('dragleave', () => {
-        upload_div.style.backgroundColor = 'transparent';
+            upload_div.style.backgroundColor = 'transparent';
 
-        var texts = upload_div.querySelectorAll('span');
+            var texts = upload_div.querySelectorAll('span');
 
-        texts[0].innerText = 'Drag & Drop';
-        texts[1].innerText = 'Or';
-        texts[2].innerText = 'Click to Upload';
+            texts[0].innerText = 'Drag & Drop';
+            texts[1].innerText = 'Or';
+            texts[2].innerText = 'Click to Upload';
         })
 
         upload_div.addEventListener('drop', (e) => {
@@ -525,26 +572,10 @@
         })
 
         function button_action(button) {
-            var but_form = '';
-            if (button.id == 'button1') {
-                but_form = 'but1_form';
-            } else if (button.id == 'button2') {
-                but_form = 'but2_form';
-            } else if (button.id == 'button3') {
-                but_form = 'but3_form';
-            }
+            type_inp.value = button.id;
+            type = button.id;
 
-            if (but_form) {
-                var xhr = new XMLHttpRequest();
-                xhr.open('POST', '/');
-                xhr.onreadystatechange = async () => {
-                    if (xhr.readyState == 4 && xhr.status == 200) {
-                        console.log(xhr.responseText);
-                    }
-                }
-                var form = new FormData(document.getElementById(but_form));
-                xhr.send(form);
-            }
+            analyse_click();
         }
 
         buttons.forEach(button => {
@@ -557,13 +588,22 @@
             var xhr = new XMLHttpRequest();
             xhr.open('POST', "/", true);
             if (uord == 'upload') {
+                vid_name = video_input.files[0].name;
                 upload_div.removeEventListener('click', upload_click);
+                upload_div.style.pointerEvents = 'none';
+                upload_div.style.cursor = 'default';
                 xhr.upload.addEventListener('progress', ({loaded, total}) => {
                     var fileLoaded = Math.floor((loaded/total) * 100);
                     progress_bar.querySelector('.progress').style.width = fileLoaded + '%';
                 });
             } else if (uord == 'download') {
-                upload_div.removeEventListener('click', analyse_click);
+                buttons.forEach(button => {
+                    button.style.display = "none";
+                })
+                if (type_el.innerHTML != type) {
+                    type_el.innerHTML = type;
+                }
+                document.querySelector('#buttons').style.bottom = '60px';
                 var restreamtext = '';
                 var first = true;
                 upload_div.querySelector('i').classList.remove('fa-child');
@@ -578,14 +618,12 @@
                             if (first) {
                                 document.querySelector('.bg').querySelector('img').style.filter = 'blur(10px) brightness(50%) saturate(110%)';
                                 upload_div.style.display = 'none';
-                                document.querySelector('.video').querySelector('video').style.display = 'block';
-                                document.querySelector('.video').querySelector('.video-name').style.display = 'block';
+                                document.querySelector('.video').querySelector('i').style.display = 'flex';
                                 document.querySelector('.heading').style.display = 'none';
                                 var texts = upload_div.querySelectorAll('span');
                                 texts[0].innerText = '';
                                 texts[0].style.display = 'none';
                                 progress_bar_analyse.classList.add('active');
-                                document.querySelector('.output-vid').querySelector('i').style.display = 'flex';
                                 first = false;
                             }
 
@@ -594,6 +632,25 @@
                     })
                     restreamtext += temp_res;
                     resstream.push(delta_res);
+                    console.log(delta_res);
+
+                    if (type == 'biceps') {
+                        rep_type = 'b_reps';
+                    } else if (type == 'squats') {
+                        rep_type = 'q_reps';
+                    } else if (type == 'strap') {
+                        rep_type = 's_reps';
+                    }
+                    
+                    if (reps != delta_res[rep_type]) {
+                        reps = delta_res[rep_type];
+                        reps_el.innerHTML = reps;
+                    }
+
+                    var consol_output = train_logic(delta_res);
+                    if (consol_output.trim().length > 0) {
+                        consol.innerHTML += consol_output;
+                    }
                 })
             }
 
@@ -605,41 +662,36 @@
                     var response = xhr.responseText;
                     
                     if (response.split('|')[0] == 'uploaded') {
-                        var video = document.createElement('video');
-                        var video_name = document.createElement('div');
-                        video_name.classList.add('video-name');
-                        video.style.display = 'none';
-                        setVideo(response.split('|')[1], video);
-                        video_name.innerHTML = response.split('|')[1].split('/').reverse()[0];
-                        video.style.filter = 'blur(3px)';
-                        document.querySelector('.video').append(video);
-                        document.querySelector('.video').append(video_name);
-                        // vidUrls[1] = 'Pose_Detect_App/output/output.mp4';
                         var texts = upload_div.querySelectorAll('span');
                         texts[0].innerText = 'Detect Pose';
                         texts[0].style.display = 'inline';
                         upload_div.querySelector('i').classList.remove('fa-upload');
                         upload_div.querySelector('i').classList.add('fa-child');
-
-                        upload_div.addEventListener('click', analyse_click);
+                        buttons.forEach(button => {
+                            button.style.display = 'block';
+                        })
                     } else {
                         progress_bar_analyse.classList.remove('active');
                         progress_bar_analyse.querySelector('.progress-analyse').style.width = '0%';
                         var output = document.createElement('video');
+                        var video_name = document.createElement('div');
+                        video_name.classList.add('video-name');
                         output.classList.add('output-video');
                         setVideo('Pose_Detect_App/output/output.mp4', output);
-                        document.querySelector('.output-vid').append(output);
-                        // output.controls = true;
-                        // output.load();
-                        // output.controls = true;
-                        document.querySelector('.video').querySelector('video').style.filter = 'none';
-                        // document.querySelector('.video').querySelector('video').controls = true;
+                        video_name.innerHTML = vid_name;
+                        document.querySelector('.video').append(output);
+                        document.querySelector('.video').append(video_name);
+                        document.querySelector('.video').querySelector('video').style.display = 'block';
+                        document.querySelector('.video').querySelector('.video-name').style.display = 'block';
+                        consol.style.display = 'flex';
+                        reps_div.style.display = 'flex';
+                        type_div.style.display = 'flex';
                         document.querySelector('.video').querySelector('video').focus();
                         document.querySelector('.video').querySelector('video').load();
                         document.querySelector('.download-landmarks').href = 'Pose_Detect_App/output/landmarks(in meters).txt';
                         document.querySelector('.download-landmarks').style.display = 'flex';
                         document.querySelector('.reset').style.display = 'flex';
-                        
+
                         first = true;
                         setControls();
                     }
@@ -649,48 +701,89 @@
             xhr.send(formData);
         }
 
+        function train_logic(delta_res) {
+            var time = asTime(delta_res.time);
+            
+            var check_out = '';
+
+            var check = [];
+            var standard = [];
+            var correct = true;
+
+            if (type == 'biceps') {
+                check = ['shoulders', 'elbows', 'hands', 'b_reps'];
+                standard = ['Shoulders Straight', 'Elbows Aligned', '', ''];
+            } else if (type == 'squats') {
+                check = ['shoulders', 'legs', 'hips', 'q_reps'];
+                standard = ['Shoulders Straight', 'Legs Straight', '', ''];
+            } else if (type == 'strap') {
+                check = ['bent', 'knees', 'elbows', 's_reps'];
+                standard = ['Bent', 'Knees Straight', '', ''];
+            }
+
+            if (check.length > 0) {
+                for (var i = 0; i < check.length; i++) {
+                    if (standard[i].length > 0) {
+                        if (delta_res[check[i]] != standard[i]) {
+                            check_out += delta_res[check[i]] + ', ';
+                            if (correct) {
+                                correct = false;
+                            }
+                        }
+                    }
+                }
+
+                check_out = check_out.slice(0, -2);
+                
+                check_out = '<font id="' + delta_res.time + '" class="timestamp">' + time + ' - ' + check_out + '.</font>';
+                check_out += '<br>';
+            }
+
+            if (!correct && prev_time != time) {
+                prev_time = time;
+                return check_out;
+            } else {
+                return '';
+            }
+        }
+
         function setControls() {
             var video = document.querySelector('.video').querySelector('video'),
-                video2 = document.querySelector('.output-video'),
                 togglePlay = document.querySelector('#play'),
                 position = document.querySelector('#position'),
                 ready = false,
                 controls = document.querySelector('#controls'),
-                scrub = document.querySelector('#scrub');
+                scrub = document.querySelector('#scrub'),
+                timestamps = document.querySelectorAll('.timestamp');
 
             controls.style.display = "flex";
 
             addEvent(togglePlay, 'click', function () {
-            if (ready) {
-                if (video.paused) {
-                    if (video.ended) {
-                        video.currentTime = 0;
-                        video2.currentTime = 0;
+                timestamps.forEach(timestamp => {
+                    if (timestamp.classList.contains('selected')) {
+                        timestamp.classList.remove('selected');
                     }
-                    video2.currentTime = video.currentTime;
-                    video.play();
-                    this.value = "Pause";
+                })
+                if (ready) {
+                    if (video.paused) {
+                        if (video.ended) {
+                            video.currentTime = 0;
+                        }
+                        video.play();
+                        this.value = "Pause";
                     } else {
-                    video.pause();
-                    this.value = "Play";
+                        video.pause();
+                        this.value = "Play";
                     }
                 }
             });
 
             function seek() {
-                scrub.value = video2.currentTime = this.currentTime;
+                scrub.value = this.currentTime;
             }
 
             addEvent(video, 'seeking', seek);
             addEvent(video, 'seeked', seek);
-
-            addEvent(video, 'play', function () {
-                video2.play();
-            });
-
-            addEvent(video, 'pause', function () {
-                video2.pause();
-            })
 
             addEvent(video, 'timeupdate', function () {
                 position.innerHTML = asTime(this.currentTime);
@@ -709,23 +802,22 @@
                 scrub.setAttribute('max', this.duration);
                 addEvent(scrub, 'change', function () {
                     video.currentTime = parseInt(this.value);
-                    video2.currentTime = parseInt(this.value);
                 });
             });
 
-            function asTime(t) {
-                t = Math.round(t);
-                var s = t % 60;
-                var m = Math.round(t / 60);
-                
-                return two(m) + ':' + two(s);
-            }
-
-            function two(s) {
-                s += "";
-                if (s.length < 2) s = "0" + s;
-                return s;
-            }
+            timestamps.forEach(timestamp => {
+                timestamp.addEventListener('click', () => {
+                    timestamps.forEach(timestamp => {
+                        if (timestamp.classList.contains('selected')) {
+                            timestamp.classList.remove('selected');
+                        }
+                    })
+                    video.currentTime = timestamp.id;
+                    if (!timestamp.classList.contains('selected')) {
+                        timestamp.classList.add('selected');
+                    }
+                })
+            })
         }
 
         function setVideo(url, video) {
@@ -759,6 +851,9 @@
         document.querySelector('body').addEventListener('keyup', (e) => {
             if (e.keyCode == 32 && document.querySelector('.video').querySelector('video')?.style.display != 'none') {
                 e.preventDefault();
+                if (timestamp.classList.contains('selected')) {
+                    timestamp.classList.remove('selected');
+                }
                 if (document.querySelector('.video').querySelector('video') != document.activeElement) {
                     if (document.querySelector('.video').querySelector('video').paused) {
                         document.querySelector('.video').querySelector('video').play();

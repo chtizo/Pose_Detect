@@ -1,6 +1,3 @@
-from attr import evolve
-
-
 def detect(link, type=""):
   import mediapipe as mp
   from typing import List, Optional, Tuple
@@ -149,13 +146,12 @@ def detect(link, type=""):
     if first:
       dimensions = img.shape
       fourcc = cv2.VideoWriter_fourcc(*'avc1')
-      video = cv2.VideoWriter('Pose_Detect_App/output/output.mp4', fourcc, fps, (dimensions[0], dimensions[1]))
+      video = cv2.VideoWriter('Pose_Detect_App/output/output.mp4', fourcc, fps, (dimensions[1], dimensions[0]))
       first = False
     
     video.write(img)
     fig.canvas.flush_events()
     fig.clear()
-    frame += 1
 
   global first, cap, fps, video, frame, total_frames, pose
   cap = cv2.VideoCapture(link)
@@ -181,13 +177,29 @@ def detect(link, type=""):
   elb_count = 0
   s_reps = 0
 
+  scale = 1
+  scale_first = True
+
   while cap.isOpened():
+      shoulders_p = "N/A"
+      legs_p = "N/A"
+      bent_p = "N/A"
+      knees_p = "N/A"
+
+      hands_p = "N/A"
+      hips_p = "N/A"
+      elbows_p = "N/A"
+    
       if cv2.waitKey(1) & 0xFF == ord('q'):
+##        f = open("Pose_Detect_App/output/landmarks(in meters).txt", 'w')
+##        f.write(lands)
+        # video.release()
+        cap.release()
         break
       if frame >= total_frames:
 ##        f = open("Pose_Detect_App/output/landmarks(in meters).txt", 'w')
 ##        f.write(lands)
-        video.release()
+        # video.release()
         cap.release()
         break
 
@@ -197,22 +209,27 @@ def detect(link, type=""):
       lands_first = True
 
       success, img = cap.read()
-      if cap.isOpened():
+      if success:
         results = pose.process(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
 
       # Print the real-world 3D coordinates of nose in meters with the origin at
       # the center between hips.
       # print('Nose world landmark:')
       points = results.pose_landmarks.landmark
+      
+      if len(type) > 0:
 
-      
-      
-      if points[indices["left_shoulder"][0]] and points[indices["right_shoulder"][0]] and len(type) > 0:
-        
-        
+        if scale_first:
+          if points[indices["left_shoulder"][0]] and points[indices["right_shoulder"][0]] and points[indices["left_hip"][0]] and points[indices["right_hip"][0]]:
+            scale = (100 + (points[indices["left_shoulder"][0]].z + points[indices["right_shoulder"][0]].z + points[indices["left_hip"][0]].z + points[indices["right_hip"][0]].z)*100/4)/100
+          
+          deviation = deviation * scale
+          scale_first = False
+
+
         # BICEP CURLS LOGIC ---------------------------------------------------------------------------------------------------------------------------------------
         
-        if type == "biceps":
+        if type == "biceps" and points[indices["left_shoulder"][0]] and points[indices["right_shoulder"][0]] and points[indices["left_elbow"][0]] and points[indices["right_elbow"][0]] and points[indices["left_shoulder"][0]] and points[indices["right_shoulder"][0]] and points[indices["left_wrist"][0]] and points[indices["right_wrist"][0]]:
 
           shoulders = False
           elbows = False
@@ -221,20 +238,24 @@ def detect(link, type=""):
           if abs(points[indices["left_shoulder"][0]].y - points[indices["right_shoulder"][0]].y) < deviation:
             if not shoulders:
               shoulders = True
-            print("Shoulders Straight")
+            shoulders_p = "Shoulders Straight"
+            # print(shoulders_p)
           else:
             if shoulders:
               shoulders = False
-            print("Shoulders Not Straight")
+            shoulders_p = "Shoulders Not Straight"
+            # print(shoulders_p)
 
-          if abs(points[indices["left_elbow"][0]].x - points[indices["left_shoulder"][0]].x) < (deviation + 1/100) and abs(points[indices["right_elbow"][0]].x - points[indices["right_shoulder"][0]].x) < (deviation + 1/100):
+          if abs(points[indices["left_elbow"][0]].x - points[indices["left_shoulder"][0]].x) < (deviation + (1/100) * scale) and abs(points[indices["right_elbow"][0]].x - points[indices["right_shoulder"][0]].x) < (deviation + (1/100) * scale):
             if not elbows:
               elbows = True
-            print("Elbows Aligned")
+            elbows_p = "Elbows Aligned"
+            # print(elbows_p)
           else:
             if elbows:
               elbows = False
-            print("Elbows Not Aligned")
+            elbows_p = "Elbows Not Aligned"
+            # print(elbows_p)
 
           wrist_pos = [(points[indices["left_wrist"][0]].y - points[indices["left_elbow"][0]].y)/abs(points[indices["left_wrist"][0]].y - points[indices["left_elbow"][0]].y), (points[indices["right_wrist"][0]].y - points[indices["right_elbow"][0]].y)/abs(points[indices["right_wrist"][0]].y - points[indices["right_elbow"][0]].y)]
 
@@ -243,25 +264,28 @@ def detect(link, type=""):
               if shoulders and elbows:
                 b_reps += 1
               wrist_count = 0
-            print("Hands Down")
+            hands_p = "Hands Down"
+            # print(hands_p)
           elif wrist_pos[0] == -1 and wrist_pos[1] == -1:
             if wrist_count == 0:
               wrist_count = 1
-            print("Hands Up")
+            hands_p = "Hands Up"
+            # print(hands_p)
           else:
             wrist_count = wrist_count
           #  wrist_count = 0
           #  reps = 0
-            print("Hands Not in Sync")
+          hands_p = "Hands Not in Sync"
+          # print(hands_p)
           # print("\n")
-          print("Bicep Curls: ", b_reps)
+          # print("Bicep Curls: ", b_reps)
 
-          print("\n")
+          # print("\n")
 
 
         # SQUATS LOGIC ----------------------------------------------------------------------------------------------------------------------------------------------------
         
-        if type == "squats":
+        if type == "squats" and points[indices["left_shoulder"][0]] and points[indices["right_shoulder"][0]] and points[indices["left_foot_index"][0]] and points[indices["right_foot_index"][0]] and points[indices["left_knee"][0]] and points[indices["right_knee"][0]] and points[indices["left_hip"][0]] and points[indices["right_hip"][0]]:
 
           shoulders = False
           legs = False
@@ -269,45 +293,52 @@ def detect(link, type=""):
           if abs(points[indices["left_shoulder"][0]].y - points[indices["right_shoulder"][0]].y) < deviation:
             if not shoulders:
               shoulders = True
-            print("Shoulders Straight")
+            shoulders_p = "Shoulders Straight"
+            # print(shoulders_p)
           else:
             if shoulders:
               shoulders = False
-            print("Shoulders Not Straight")
+            shoulders_p = "Shoulders Not Straight"
+            # print(shoulders_p)
           
           if (0 < (points[indices["left_foot_index"][0]].x - points[indices["left_hip"][0]].x) and 0 < (points[indices["left_knee"][0]].x - points[indices["left_hip"][0]].x) and (0 > (points[indices["right_foot_index"][0]].x - points[indices["right_hip"][0]].x) and 0 > (points[indices["right_knee"][0]].x - points[indices["right_hip"][0]].x))) :
             if not legs:
               legs = True
-            print("Legs Straight") 
+            legs_p = "Legs Straight"
+            # print(legs_p) 
           else:
             if legs:
               legs = False
-            print("Legs Not Straight")
+            legs_p = "Legs Not Straight"
+            # print(legs_p)
 
-          hip_pos = [0 < (points[indices["left_knee"][0]].y - points[indices["left_hip"][0]].y) < (deviation + 10/100), 0 < (points[indices["right_knee"][0]].y - points[indices["right_hip"][0]].y) < (deviation + 10/100)]
+          hip_pos = [0 < (points[indices["left_knee"][0]].y - points[indices["left_hip"][0]].y) < (deviation + (10/100) * scale), 0 < (points[indices["right_knee"][0]].y - points[indices["right_hip"][0]].y) < (deviation + (10/100) * scale)]
 
           if hip_pos[0] and hip_pos[1]:
             if hip_count != 0:
               if shoulders and legs:
                 q_reps += 1
               hip_count = 0
-            print("Hips Down")
+            hips_p = "Hips Down"
+            # print(hips_p)
           elif not hip_pos[0] and not hip_pos[1]:
             if hip_count == 0:
               hip_count = 1
-            print("Hips Up")
+            hips_p = "Hips Up"
+            # print(hips_p)
           else:
             hip_count = hip_count
-            print("Hips Not in Sync")
+            hips_p = "Hips Not in Sync"
+            # print(hips_p)
 
-          print("Squats: ", q_reps)
+          # print("Squats: ", q_reps)
           
-          print("\n")
+          # print("\n")
 
 
         # STRAP LOGIC --------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        if type == "strap":
+        if type == "strap" and points[indices["left_shoulder"][0]] and points[indices["right_shoulder"][0]] and points[indices["left_hip"][0]] and points[indices["right_hip"][0]] and points[indices["left_knee"][0]] and points[indices["right_knee"][0]] and points[indices["left_hip"][0]] and points[indices["right_hip"][0]] and points[indices["left_elbow"][0]] and points[indices["right_elbow"][0]]:
 
           bent = False
           knees = False
@@ -315,65 +346,110 @@ def detect(link, type=""):
           if abs(points[indices["left_shoulder"][0]].x - points[indices["left_hip"][0]].x) > (deviation) and abs(points[indices["right_shoulder"][0]].x - points[indices["right_hip"][0]].x) > (deviation):
             if not bent:
               bent = True
-            print("Bent")
+            bent_p = "Bent"
+            # print(bent_p)
           else:
             if bent:
               bent = False
-            print("Not Bent")
+            bent_p = "Not Bent"
+            # print(bent_p)
           
-          if abs(points[indices["left_knee"][0]].x - points[indices["left_hip"][0]].x) < (deviation + 2/100) and abs(points[indices["left_knee"][0]].x - points[indices["left_hip"][0]].x) < (deviation + 2/100):
+          if abs(points[indices["left_knee"][0]].x - points[indices["left_hip"][0]].x) < (deviation + (2/100) * scale) and abs(points[indices["left_knee"][0]].x - points[indices["left_hip"][0]].x) < (deviation + (2/100) * scale):
             if not knees:
               knees = True
-            print("Knees Straight")
+            knees_p = "Knees Straight"
+            # print(knees_p)
           else:
             if knees:
               knees = False
-            print("Knees Not Straight")
+            knees_p = "Knees Not Straight"
+            # print(knees_p)
 
-          elb_pos = [points[indices["left_elbow"][0]].y - points[indices["left_shoulder"][0]].y < (deviation + 3/100), points[indices["right_elbow"][0]].y - points[indices["right_shoulder"][0]].y < (deviation + 3/100)]
+          elb_pos = [points[indices["left_elbow"][0]].y - points[indices["left_shoulder"][0]].y < (deviation + (3/100) * scale), points[indices["right_elbow"][0]].y - points[indices["right_shoulder"][0]].y < (deviation + (3/100) * scale)]
 
           if elb_pos[0] and elb_pos[1]:
             if elb_count != 0:
               if bent and knees:
                 s_reps += 1
               elb_count = 0
-            print("Elbows Up")
+            elbows_p = "Elbows Up"
+            # print(elbows_p)
           elif not elb_pos[0] and not elb_pos[1]:
             if elb_count != 1:
               elb_count = 1
-            print("Elbows Down")
+            elbows_p = "Elbows Down"
+            # print(elbows_p)
           else:
             elb_count = elb_count
-            print("Elbows Not in Sync")
+            elbows_p = "Elbows Not in Sync"
+            # print(elbows_p)
 
-          print("Strap Pulls: ", s_reps)
+          # print("Strap Pulls: ", s_reps)
 
-          print("\n")
+          # print("\n")
         
 ##      print(results.pose_world_landmarks.landmark[indices["left_knee"][0]] if results.pose_world_landmarks.landmark[indices["left_knee"][0]] else "None", indices["left_knee"][1])
       #if len(results.pose_world_landmarks) >0:
       # Plot pose world landmarks.
-      mp_drawing.draw_landmarks(img, results.pose_landmarks, mp_pose.POSE_CONNECTIONS,
-                                mp_drawing.DrawingSpec(color=(245,117,66), thickness=2, circle_radius=2), 
-                                mp_drawing.DrawingSpec(color=(245,66,230), thickness=2, circle_radius=2) 
-                                 )
+
+      mp_drawing.draw_landmarks(img, results.pose_landmarks, mp_pose.POSE_CONNECTIONS, mp_drawing.DrawingSpec(color=(245,117,66), thickness=2, circle_radius=2), mp_drawing.DrawingSpec(color=(245,66,230), thickness=2, circle_radius=2))
+      
+      # if first:
+      #   dimensions = img.shape
+      #   fourcc = cv2.VideoWriter_fourcc(*'avc1')
+      #   # video = cv2.VideoWriter('Pose_Detect_App/output/ot.mp4', fourcc, fps, (dimensions[1], dimensions[0]))
+      #   video = cv2.VideoWriter('ot.mp4', fourcc, fps, (dimensions[1], dimensions[0]))
+      #   first = False
+      
+      # video.write(img)
+      
       cv2.imshow("Test", img)
-##      plot_landmarks(results.pose_world_landmarks, mp_pose.POSE_CONNECTIONS)
-##      for landmark in results.pose_world_landmarks.landmark:
-##        if lands_first:
-##          lands += f'{landmark.x}, {landmark.y}, {landmark.z}'
-##          lands_first = False
-##        else:
-##          lands += f', {landmark.x}, {landmark.y}, {landmark.z}'
-##      if frame < total_frames:
-##        lands += '\n'
+      frame += 1
+    #  plot_landmarks(results.pose_world_landmarks, mp_pose.POSE_CONNECTIONS)
+      # for landmark in results.pose_world_landmarks.landmark:
+      #   if lands_first:
+      #     lands += f'{landmark.x}, {landmark.y}, {landmark.z}'
+      #     lands_first = False
+      #   else:
+      #     lands += f', {landmark.x}, {landmark.y}, {landmark.z}'
+      # if frame < total_frames:
+      #   lands += '\n'
       # print("drew")
       #else:
           #print("No landmarks")
       # print(frame)
-      #yield json.dumps({"time": current_time, "total_time": time}) + "|"
+      print({
+        "time": current_time, 
+        "total_time": time,
+        "type": type,
+        "shoulders": shoulders_p,
+        "legs": legs_p,
+        "bent": bent_p,
+        "knees": knees_p,
+        "hands": hands_p,
+        "hips": hips_p,
+        "elbows": elbows_p,
+        "b_reps": b_reps,
+        "q_reps": q_reps,
+        "s_reps": s_reps,
+        "deviation": deviation,
+        })
+      # yield json.dumps({
+      #   "time": current_time, 
+      #   "total_time": time,
+      #   "type": type,
+      #   "shoulders": shoulders_p,
+      #   "legs": legs_p,
+      #   "bent": bent_p,
+      #   "knees": knees_p,
+      #   "hands": hands_p,
+      #   "hips": hips_p,
+      #   "elbows": elbows_p,
+      #   "b_reps": b_reps,
+      #   "q_reps": q_reps,
+      #   "s_reps": s_reps
+      #   }) + "|"
       # if cv2.waitKey(1) & 0xFF == 27:
       #     break
-  return
 
-detect('bicep curls correct.mp4', "biceps")
+detect('squats error.mp4', "squats")

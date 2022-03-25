@@ -1,6 +1,6 @@
 from Pose_Detect_App.functions import handle_uploaded_file
-from Pose_Detect_App.forms import VideoForm, AnalyseConfirm, Button1, Button2, Button3
-from App_Script.pose import detect
+from Pose_Detect_App.forms import VideoForm, AnalyseConfirm
+from App_Script.pose_new import detect
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import StreamingHttpResponse
@@ -23,11 +23,13 @@ def index(request):
             return HttpResponse('uploaded|' + path)  
 
         elif (request.POST['ins'] == 'analyse'):
+
+            typ = request.POST['type']
             
             link = 'Pose_Detect_App/upload/' + file
 
-            # return StreamingHttpResponse(detect(link))
-            return StreamingHttpResponse(iterator())
+            return StreamingHttpResponse(detect(link, typ))
+            # return StreamingHttpResponse(iterator())
 
         elif (request.POST['ins'] == 'button1'):
             return HttpResponse('Button1 Pressed')
@@ -40,10 +42,7 @@ def index(request):
     else:
         video = VideoForm()
         analyse = AnalyseConfirm()
-        but1 = Button1()
-        but2 = Button2()
-        but3 = Button3()
-        return render(request, "index.html", {'video': video, 'analyse': analyse, 'but1': but1, 'but2': but2, 'but3': but3})
+        return render(request, "index.html", {'video': video, 'analyse': analyse})
 
 def iterator():
     x = 100

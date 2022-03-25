@@ -108,7 +108,7 @@ def detect(link):
     if first:
       dimensions = img.shape
       fourcc = cv2.VideoWriter_fourcc(*'avc1')
-      video = cv2.VideoWriter('Pose_Detect_App/output/output.mp4', fourcc, fps, (dimensions[0], dimensions[1]))
+      video = cv2.VideoWriter('Pose_Detect_App/output/output.mp4', fourcc, fps, (dimensions[1], dimensions[0]))
       first = False
     
     video.write(img)
