@@ -191,14 +191,18 @@ def detect(link, type=""):
       elbows_p = "N/A"
     
       if cv2.waitKey(1) & 0xFF == ord('q'):
-        f = open("Pose_Detect_App/output/landmarks(in meters).txt", 'w')
+        f = open("Pose_Detect_App/output/landmarks(in pixels).txt", 'w')
         f.write(lands)
+        # f = open("landmarks(in pixels).txt", 'w')
+        # f.write(lands)
         video.release()
         cap.release()
         break
       if frame >= total_frames:
-        f = open("Pose_Detect_App/output/landmarks(in meters).txt", 'w')
+        f = open("Pose_Detect_App/output/landmarks(in pixels).txt", 'w')
         f.write(lands)
+        # f = open("landmarks(in pixels).txt", 'w')
+        # f.write(lands)
         video.release()
         cap.release()
         break
@@ -393,24 +397,26 @@ def detect(link, type=""):
 
       mp_drawing.draw_landmarks(img, results.pose_landmarks, mp_pose.POSE_CONNECTIONS, mp_drawing.DrawingSpec(color=(245,117,66), thickness=2, circle_radius=2), mp_drawing.DrawingSpec(color=(245,66,230), thickness=2, circle_radius=2))
       
+      for i in range(0, 33):
+        print(results.pose_landmarks.landmark[i].x * img.shape[1], img.shape[0] - (results.pose_landmarks.landmark[i].y * img.shape[0]), results.pose_landmarks.landmark[i].z * img.shape[1])
+
       if first:
         dimensions = img.shape
         fourcc = cv2.VideoWriter_fourcc(*'avc1')
-        # video = cv2.VideoWriter('Pose_Detect_App/output/ot.mp4', fourcc, fps, (dimensions[1], dimensions[0]))
         video = cv2.VideoWriter('Pose_Detect_App/output/output.mp4', fourcc, fps, (dimensions[1], dimensions[0]))
         first = False
       
       video.write(img)
       
-    #   cv2.imshow("Test", img)
+      cv2.imshow("Test", img)
       frame += 1
-    #  plot_landmarks(results.pose_world_landmarks, mp_pose.POSE_CONNECTIONS)
-      for landmark in results.pose_world_landmarks.landmark:
+    #  plot_landmarks(results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
+      for landmark in results.pose_landmarks.landmark:
         if lands_first:
-          lands += f'{landmark.x}, {landmark.y}, {landmark.z}'
+          lands += f'{landmark.x * img.shape[1]}, {img.shape[0] - (landmark.y * img.shape[0])}, {landmark.z * img.shape[1]}'
           lands_first = False
         else:
-          lands += f', {landmark.x}, {landmark.y}, {landmark.z}'
+          lands += f', {landmark.x * img.shape[1]}, {img.shape[0] - (landmark.y * img.shape[0])}, {landmark.z * img.shape[1]}'
       if frame < total_frames:
         lands += '\n'
 
@@ -419,22 +425,22 @@ def detect(link, type=""):
           #print("No landmarks")
       # print(frame)
 
-    #   print({
-    #     "time": current_time, 
-    #     "total_time": time,
-    #     "type": type,
-    #     "shoulders": shoulders_p,
-    #     "legs": legs_p,
-    #     "bent": bent_p,
-    #     "knees": knees_p,
-    #     "hands": hands_p,
-    #     "hips": hips_p,
-    #     "elbows": elbows_p,
-    #     "b_reps": b_reps,
-    #     "q_reps": q_reps,
-    #     "s_reps": s_reps,
-    #     "deviation": deviation,
-    #     })
+      # print({
+      #   "time": current_time, 
+      #   "total_time": time,
+      #   "type": type,
+      #   "shoulders": shoulders_p,
+      #   "legs": legs_p,
+      #   "bent": bent_p,
+      #   "knees": knees_p,
+      #   "hands": hands_p,
+      #   "hips": hips_p,
+      #   "elbows": elbows_p,
+      #   "b_reps": b_reps,
+      #   "q_reps": q_reps,
+      #   "s_reps": s_reps,
+      #   "deviation": deviation,
+      #   })
       yield json.dumps({
         "time": current_time, 
         "total_time": time,
@@ -453,4 +459,4 @@ def detect(link, type=""):
       if cv2.waitKey(1) & 0xFF == 27:
           break
 
-# detect('squats error.mp4', "squats")
+# detect('Video.mp4')
