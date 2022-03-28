@@ -397,8 +397,8 @@ def detect(link, type=""):
 
       mp_drawing.draw_landmarks(img, results.pose_landmarks, mp_pose.POSE_CONNECTIONS, mp_drawing.DrawingSpec(color=(245,117,66), thickness=2, circle_radius=2), mp_drawing.DrawingSpec(color=(245,66,230), thickness=2, circle_radius=2))
       
-      for i in range(0, 33):
-        print(results.pose_landmarks.landmark[i].x * img.shape[1], img.shape[0] - (results.pose_landmarks.landmark[i].y * img.shape[0]), results.pose_landmarks.landmark[i].z * img.shape[1])
+      # for i in range(0, 33):
+      #   print(results.pose_landmarks.landmark[i].x * img.shape[1], img.shape[0] - (results.pose_landmarks.landmark[i].y * img.shape[0]), results.pose_landmarks.landmark[i].z * img.shape[1])
 
       if first:
         dimensions = img.shape
@@ -408,7 +408,7 @@ def detect(link, type=""):
       
       video.write(img)
       
-      cv2.imshow("Test", img)
+      # cv2.imshow("Test", img)
       frame += 1
     #  plot_landmarks(results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
       for landmark in results.pose_landmarks.landmark:

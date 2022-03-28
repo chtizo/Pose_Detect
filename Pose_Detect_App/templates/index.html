@@ -325,8 +325,8 @@
             border-radius: 4px;
             background-color: rgba(0, 0, 0, 0.2);
             width: 600px;
-            height: 500px;
-            transform: translate(0, -55px);
+            height: 350px;
+            transform: translate(0, 10px);
             overflow: auto;
             white-space: pre;
         }
@@ -347,28 +347,30 @@
         .reps {
             display: none;
             position: absolute;
-            top: 120px;
-            right: 560px;
+            top: 230px;
+            right: 500px;
             height: fit-content;
             width: fit-content;
             padding: 5px;
-            background-color: rgba(0, 0, 0, 0.1);
-            border: 2px solid white;
-            border-radius: 4px;
+            font-size: 25px;
+            /* background-color: rgba(0, 0, 0, 0.1);
+            border: 2px solid white; */
+            /* border-radius: 4px; */
             white-space: pre;
         }
 
         .type {
             display: none;
             position: absolute;
-            top: 120px;
-            right: 465px;
+            top: 230px;
+            right: 340px;
             height: fit-content;
             width: fit-content;
             padding: 5px;
-            background-color: rgba(0, 0, 0, 0.1);
-            border: 2px solid white;
-            border-radius: 4px;
+            font-size: 25px;
+            /* background-color: rgba(0, 0, 0, 0.1);
+            border: 2px solid white; */
+            /* border-radius: 4px; */
             white-space: pre;
         }
     </style>
@@ -413,7 +415,7 @@
             <i class="fas fa-spinner fa-pulse"></i>
         </div>
         <div class="reps"><font id="desc">Total Reps: </font><font id="reps">0</font></div>
-        <div class="type"><font id="type"></font></div>
+        <div class="type">(<font id="type"></font>)</div>
         <div class="console"></div>
     </div>
 
@@ -601,7 +603,7 @@
                     button.style.display = "none";
                 })
                 if (type_el.innerHTML != type) {
-                    type_el.innerHTML = type;
+                    type_el.innerHTML = type.substring(0, 1).toUpperCase() + type.substring(1);
                 }
                 document.querySelector('#buttons').style.bottom = '60px';
                 var restreamtext = '';
